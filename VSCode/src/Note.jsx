@@ -2,9 +2,7 @@ import React, { useState, useEffect, useId, useRef } from "react";
 
 function Note({ setSelectedNoteId, selectedNoteId }) {
   const [selectedNote, setSelectedNote] = useState("");
-  const postTextAreaId = useId();
-
-  let renderNote;
+  const [textAreaValue, setTextAreaValue] = useState("");
 
   useEffect(() => {
     fetch(`/api/notes/${selectedNoteId}`)
@@ -12,21 +10,14 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
       .then((res) => setSelectedNote(res));
   }, [selectedNoteId]);
 
-  function handleSubmit(e) {
-    e.preventDefault();
-
-    const form = e.target;
-    const formData = new FormData(form);
-
-    const formJson = Object.fromEntries(formData.entries());
-
+  function saveNote() {
     fetch("/api/notes", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        notetext: formJson.postContent,
+        notetext: textAreaValue,
         lastupdatedtime: new Date().toISOString().split(".")[0],
       }),
     });
@@ -42,29 +33,23 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
     });
   }
 
-  console.log(selectedNoteId);
-
-  if (selectedNote) {
-    renderNote = (
-      <textarea
-        id={postTextAreaId}
-        name="postContent"
-        defaultValue={selectedNote.notetext}
-        className="note-disp-edit-area"
-      />
-    );
-  }
-
   return (
     <div className="app-note">
       <button onClick={() => deleteNote()}>Delete</button>
-      <button>New</button>
-
-      <form method="POST" onSubmit={handleSubmit}>
-        <button type="submit">Save</button>
-        <hr />
-        {renderNote}
-      </form>
+      <button onClick={() => saveNote()}>Save</button>
+      <hr />
+      {console.log(
+        "\n\n---selectedNote.notetext---\n",
+        selectedNote.notetext,
+        "\n\n---textAreaValue---\n",
+        textAreaValue
+      )}
+      <textarea
+        name="postContent"
+        defaultValue={selectedNote.notetext}
+        onChange={(e) => setTextAreaValue(e.target.value)}
+        className="note-disp-edit-area"
+      />
     </div>
   );
 }
