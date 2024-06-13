@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useId } from "react";
+import React, { useState, useEffect, useId, useRef } from "react";
 
-function Note({ selectedNoteId }) {
+function Note({ setSelectedNoteId, selectedNoteId }) {
   const [selectedNote, setSelectedNote] = useState("");
   const postTextAreaId = useId();
 
@@ -12,7 +12,27 @@ function Note({ selectedNoteId }) {
       .then((res) => setSelectedNote(res));
   }, [selectedNoteId]);
 
-  const deleteNote = () => {
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const formData = new FormData(form);
+
+    const formJson = Object.fromEntries(formData.entries());
+
+    fetch("/api/notes", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        notetext: formJson.postContent,
+        lastupdatedtime: new Date().toISOString().split(".")[0],
+      }),
+    });
+  }
+
+  function deleteNote() {
     fetch(`/api/notes/${selectedNoteId}`, {
       method: "DELETE",
       headers: {
@@ -20,7 +40,9 @@ function Note({ selectedNoteId }) {
       },
       body: null,
     });
-  };
+  }
+
+  console.log(selectedNoteId);
 
   if (selectedNote) {
     renderNote = (
@@ -28,19 +50,21 @@ function Note({ selectedNoteId }) {
         id={postTextAreaId}
         name="postContent"
         defaultValue={selectedNote.notetext}
+        className="note-disp-edit-area"
       />
     );
-  } else {
-    renderNote = <p>selectedNote.length -le 0</p>;
   }
 
   return (
     <div className="app-note">
-      <button>New</button>
-      <button>Save</button>
       <button onClick={() => deleteNote()}>Delete</button>
-      <hr />
-      <div className="note-disp-edit-area">{renderNote}</div>
+      <button>New</button>
+
+      <form method="POST" onSubmit={handleSubmit}>
+        <button type="submit">Save</button>
+        <hr />
+        {renderNote}
+      </form>
     </div>
   );
 }

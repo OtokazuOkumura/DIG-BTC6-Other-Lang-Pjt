@@ -16,7 +16,10 @@ function App() {
           setNotes={setNotes}
           setSelectedNoteId={setSelectedNoteId}
         />
-        <Note selectedNoteId={selectedNoteId} />
+        <Note
+          setSelectedNoteId={setSelectedNoteId}
+          selectedNoteId={selectedNoteId}
+        />
       </div>
     </>
   );
