@@ -39,17 +39,22 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
       <button onClick={() => saveNote()}>Save</button>
       <hr />
       {console.log(
-        "\n\n---selectedNote.notetext---\n",
+        "\n\n---before selectedNote.notetext---\n",
         selectedNote.notetext,
-        "\n\n---textAreaValue---\n",
+        "\n\n---before textAreaValue---\n",
         textAreaValue
       )}
       <textarea
-        name="postContent"
         defaultValue={selectedNote.notetext}
         onChange={(e) => setTextAreaValue(e.target.value)}
         className="note-disp-edit-area"
       />
+      {console.log(
+        "\n\n---after selectedNote.notetext---\n",
+        selectedNote.notetext,
+        "\n\n---after textAreaValue---\n",
+        textAreaValue
+      )}
     </div>
   );
 }
