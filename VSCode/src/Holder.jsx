@@ -20,7 +20,7 @@ function Holder({ notes, setNotes, setSelectedNoteId }) {
       <Card key={index} note={note} setSelectedNoteId={setSelectedNoteId} />
     ));
   } else {
-    renderCards = <p>notes.length -le 0</p>;
+    renderCards = <p>ロード中</p>;
   }
 
   return <div className="app-holder">{renderCards}</div>;

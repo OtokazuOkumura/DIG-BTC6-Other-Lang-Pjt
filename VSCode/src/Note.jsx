@@ -11,6 +11,9 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
   }, [selectedNoteId]);
 
   function saveNote() {
+    const date = new Date();
+    date.setHours(date.getHours() + 9);
+
     fetch("/api/notes", {
       method: "POST",
       headers: {
@@ -18,9 +21,12 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
       },
       body: JSON.stringify({
         notetext: textAreaValue,
-        lastupdatedtime: new Date().toISOString().split(".")[0],
+        // lastupdatedtime: new Date().toISOString().split(".")[0],
+        lastupdatedtime: date.toISOString().split(".")[0],
       }),
     });
+
+    window.location.reload();
   }
 
   function deleteNote() {
@@ -38,23 +44,11 @@ function Note({ setSelectedNoteId, selectedNoteId }) {
       <button onClick={() => deleteNote()}>Delete</button>
       <button onClick={() => saveNote()}>Save</button>
       <hr />
-      {console.log(
-        "\n\n---before selectedNote.notetext---\n",
-        selectedNote.notetext,
-        "\n\n---before textAreaValue---\n",
-        textAreaValue
-      )}
       <textarea
         defaultValue={selectedNote.notetext}
         onChange={(e) => setTextAreaValue(e.target.value)}
         className="note-disp-edit-area"
       />
-      {console.log(
-        "\n\n---after selectedNote.notetext---\n",
-        selectedNote.notetext,
-        "\n\n---after textAreaValue---\n",
-        textAreaValue
-      )}
     </div>
   );
 }

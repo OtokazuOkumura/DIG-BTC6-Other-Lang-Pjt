@@ -4,7 +4,7 @@ function Card({ note, setSelectedNoteId }) {
   return (
     <div className="holder-card">
       <p>{note.notetext}</p>
-      <p>{note.lastupdatedtime}</p>
+      <p>{note.lastupdatedtime.replace("T", " ").split(".")[0]}</p>
       <button
         onClick={() => {
           setSelectedNoteId(note.id);
